@@ -2,9 +2,12 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 
+// List
 import List, { ListItem, ListItemIcon, ListItemText } from 'material-ui/List';
-import InboxIcon from 'material-ui-icons/Inbox';
-import DraftsIcon from 'material-ui-icons/Drafts';
+
+// Icons
+import HomeIcon from 'material-ui-icons/Home';
+import InfoIcon from 'material-ui-icons/Info';
 
 const AppMenu = () => {
   return (
@@ -12,17 +15,17 @@ const AppMenu = () => {
       <Link to="/" style={{ textDecoration: 'none' }}>
         <ListItem button >
           <ListItemIcon>
-            <InboxIcon />
+            <HomeIcon />
           </ListItemIcon>
-          <ListItemText primary="Inbox" />
+          <ListItemText primary="Home" />
         </ListItem>
       </Link>
       <Link to="/about" style={{ textDecoration: 'none' }}>
         <ListItem button>
           <ListItemIcon>
-            <DraftsIcon />
+            <InfoIcon />
           </ListItemIcon>
-          <ListItemText primary="Drafts" />
+          <ListItemText primary="Info" />
         </ListItem>
       </Link>
     </List>
