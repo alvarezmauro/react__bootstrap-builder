@@ -1,19 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withStyles } from 'material-ui/styles';
 import classNames from 'classnames';
-import Drawer from 'material-ui/Drawer';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-
+import { withStyles } from 'material-ui/styles';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
 import IconButton from 'material-ui/IconButton';
+
+// App Bar
+import AppBar from 'material-ui/AppBar';
+import Toolbar from 'material-ui/Toolbar';
+import Drawer from 'material-ui/Drawer';
 import MenuIcon from 'material-ui-icons/Menu';
+import AppMenu from './AppMenu';
+
+// Icons
 import ChevronLeftIcon from 'material-ui-icons/ChevronLeft';
 import ChevronRightIcon from 'material-ui-icons/ChevronRight';
-
-import AppMenu from './AppMenu';
 
 const drawerWidth = 240;
 
@@ -189,8 +191,8 @@ class AppLayout extends React.Component {
 }
 
 AppLayout.defaultProps = {
-  title: '',
-  anchor: 'left'
+  title: '', // App bar title
+  anchor: 'left', // Drawer position
 };
 
 

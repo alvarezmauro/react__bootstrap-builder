@@ -6,6 +6,8 @@ import WebpackMd5Hash from 'webpack-md5-hash';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 const GLOBALS = {
   'process.env.NODE_ENV': JSON.stringify('production'),
   __DEV__: false
@@ -24,6 +26,14 @@ export default {
     filename: '[name].[chunkhash].js'
   },
   plugins: [
+    new CopyWebpackPlugin([
+      {
+        from: './node_modules/sass.js/dist/sass.js',
+        to: 'static/sass.js',
+        toType: 'dir'
+      }
+    ]),
+
     // Hash the files using MD5 so that their names change when the content changes.
     new WebpackMd5Hash(),
 

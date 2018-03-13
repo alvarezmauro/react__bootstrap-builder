@@ -2,6 +2,8 @@ import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 export default {
   resolve: {
     extensions: ['*', '.js', '.jsx', '.json']
@@ -21,6 +23,12 @@ export default {
     filename: 'bundle.js'
   },
   plugins: [
+    new CopyWebpackPlugin([
+      {
+        from: 'static/',
+        to: 'static/'
+      }
+    ]),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('development'), // Tells React to build in either dev or prod modes. https://facebook.github.io/react/downloads.html (See bottom)
       __DEV__: true
