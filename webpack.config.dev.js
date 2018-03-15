@@ -2,7 +2,7 @@ import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import path from 'path';
 
-var CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 export default {
   resolve: {
@@ -26,7 +26,8 @@ export default {
     new CopyWebpackPlugin([
       {
         from: 'static/',
-        to: 'static/'
+        to: 'static/',
+        toType: 'dir'
       }
     ]),
     new webpack.DefinePlugin({

@@ -29,7 +29,8 @@ export default {
     new CopyWebpackPlugin([
       {
         from: 'static/',
-        to: 'static/'
+        to: 'static/',
+        toType: 'dir'
       }
     ]),
     // Hash the files using MD5 so that their names change when the content changes.
