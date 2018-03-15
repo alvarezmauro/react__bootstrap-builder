@@ -85,8 +85,7 @@ const BootstrapSassFilesList = [
   'utilities/_sizing.scss',
   'utilities/_spacing.scss',
   'utilities/_text.scss',
-  'utilities/_visibility.scss',
-  '_docs.scss'
+  'utilities/_visibility.scss'
 ];
 
 export default BootstrapSassFilesList;

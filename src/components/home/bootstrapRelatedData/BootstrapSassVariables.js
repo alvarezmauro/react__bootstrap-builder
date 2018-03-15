@@ -1287,8 +1287,8 @@ const BoostrapScssVariables = [
       },
       {
         "key": "$custom-file-text",
-        "value": "(placeholder: (en: 'Choose file...'), button-label: (en: 'Browse'))",
-        "default": "(placeholder: (en: 'Choose file...'), button-label: (en: 'Browse'))",
+        "value": "(placeholder: 'Choose file...', button-label: 'Browse')",
+        "default": "(placeholder: 'Choose file...', button-label: 'Browse')",
         "type": ""
       },
       {
