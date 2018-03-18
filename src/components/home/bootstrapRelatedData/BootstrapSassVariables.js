@@ -2,7 +2,7 @@
 * JSON representation of the Bootstrap variables.scss file
 */
 
-const BoostrapScssVariables = [
+export default [
   {
     "name": "Brand Colors",
     "slug": "brand-color",
@@ -2877,5 +2877,3 @@ const BoostrapScssVariables = [
     ]
   }
 ];
-
-export default BoostrapScssVariables;

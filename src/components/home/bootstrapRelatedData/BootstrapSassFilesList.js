@@ -2,7 +2,7 @@
 * List of all bootstrap files
 */
 
-const BootstrapSassFilesList = [
+export default [
   '_alert.scss',
   '_badge.scss',
   '_breadcrumb.scss',
@@ -87,5 +87,3 @@ const BootstrapSassFilesList = [
   'utilities/_text.scss',
   'utilities/_visibility.scss'
 ];
-
-export default BootstrapSassFilesList;
