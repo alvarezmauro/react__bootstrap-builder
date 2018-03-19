@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 
 import BootstrapSassFilesList from './bootstrapRelatedData/BootstrapSassFilesList';
 import BootstrapSassVariables from './bootstrapRelatedData/BootstrapSassVariables';
+import BootstrapPreviewSass from './bootstrapRelatedData/BootstrapPreviewSass'
 
 // Bootstrap preview components
 import BootstrapPreviewButtons from './bootstrapPreview/BootstrapPreviewButtons';
@@ -31,14 +32,15 @@ class HomePage extends React.Component {
     this.sassFrameworkFilesList = bootstrapSassFilesList;
     this.sassFrameworkMainFile = 'bootstrap.scss';
 
-    this.sassFrameworkVariables = bootstrapSassVariables;
+    this.sassFrameworkVariablesOriginal = bootstrapSassVariables;
 
     this.state = {
       open: false,
-      bootstrapMainFile: '',
-      stringBootstrapVariables: '',
-      BootstrapVariables: null,
-      BootstrapCompiled: ''
+      sassFrameworkMainFileString: '',
+      sassFrameworkVariablesString: '',
+      sassFrameworkVariables: null,
+      sassFrameworkCompiled: '',
+      sassFrameworkName: 'bootstrap'
     };
 
     this.getSassJsInstance = this.getSassJsInstance.bind(this);
@@ -47,7 +49,8 @@ class HomePage extends React.Component {
 
     this.initBootstrapSass = this.initBootstrapSass.bind(this);
     this.preloadSassFilesAndReturnMainFileContent = this.preloadSassFilesAndReturnMainFileContent.bind(this);
-    this.compileSass = this.compileSass.bind(this);
+    this.compileSassFramework = this.compileSassFramework.bind(this);
+    this.compileSassFrameworkBootstrap = this.compileSassFrameworkBootstrap.bind(this)
   }
 
   componentDidMount() {
@@ -56,11 +59,11 @@ class HomePage extends React.Component {
 
   initBootstrapSass(){
     this.setState({
-      stringBootstrapSassVariables: this.getSassFrameworkVariablesFileString(this.sassFrameworkVariables)
+      sassFrameworkVariablesString: this.getSassFrameworkVariablesFileString(this.sassFrameworkVariablesOriginal)
     });
 
     this.setState({
-      BootstrapVariables: this.getSassFrameworkVariables(this.sassFrameworkVariables)
+      sassFrameworkVariables: this.getSassFrameworkVariables(this.sassFrameworkVariablesOriginal)
     });
 
 
@@ -69,17 +72,17 @@ class HomePage extends React.Component {
       this.sassFrameworkFilesPathBase,
       this.sassFrameworkFilesPathDirectory,
       this.sassFrameworkFilesList,
-      this.sassFrameworkMainFile).then(
-      bootstrapMainFileContent => {
-        this.setState({bootstrapMainFile: bootstrapMainFileContent});
-        this.compileSass(this.sass, this.state.stringBootstrapVariables, this.state.bootstrapMainFile).
-        then(function (data){
-            let bootstrapCompiled = data;
-            this.setState({bootstrapCompiled: bootstrapCompiled});
+      this.sassFrameworkMainFile).then( sassFrameworkMainFileContent => {
+        this.setState({sassFrameworkMainFileString: sassFrameworkMainFileContent});
+        this.compileSassFramework(
+          this.sass,
+          this.state.sassFrameworkVariablesString,
+          this.state.sassFrameworkMainFileString,
+          this.state.sassFrameworkName).then(function (data){
+            this.setState({sassFrameworkCompiled: data});
           }.bind(this)
         )
-      }
-    );
+      });
   }
 
   /*
@@ -178,32 +181,51 @@ class HomePage extends React.Component {
     });
   }
 
-  compileSass(sass, stringBootstrapVariables, bootstrapMainFile) {
-    return new Promise((resolve, reject) => {
-      sass.writeFile('toAddScss.scss', stringBootstrapVariables);
-      sass.compile(
-            ".test{ @import '_functions.scss'; @import 'toAddScss';" + bootstrapMainFile + '}',
-            // bootstrapMainFile,
-        function(result) {
-              console.log(result);
-              if (result.status === 0) {
-                resolve(result.text)
-              } else {
-                reject(result.message)
-              }
-            }
-          )
-    });
+  /*
+   * Create variables.sass file on the fly using the values saved in sassFrameworkVariablesString.
+   * Compile SASS framework using the variables.sass file created and sassFrameworkMainFileString and return
+   * a promise with the outcome of that compilation.
+   *
+   * {sass} - Sass.js instance
+   * (sassFrameworkVariablesString) - String with tha variables for the sass framework
+   * (sassFrameworkMainFileString) - String with the content of the main sass file of the framework
+   *
+  */
+  compileSassFramework(sass, sassFrameworkVariablesString, sassFrameworkMainFileString, sassFrameworkName) {
+    switch (sassFrameworkName) {
+      case 'bootstrap':
+        return this.compileSassFrameworkBootstrap(sass, sassFrameworkVariablesString, sassFrameworkMainFileString);
+    }
   }
 
+  compileSassFrameworkBootstrap(sass, sassFrameworkVariablesString, sassFrameworkMainFileString) {
+
+    return new Promise((resolve, reject) => {
+      // sass.writeFile('variables.scss', sassFrameworkVariablesString);
+      sass.writeFile('preview.scss', BootstrapPreviewSass);
+      sass.compile(
+        // ".test{ @import '_functions.scss'; @import 'variables';" + sassFrameworkMainFileString + '}',
+        ".sassFrameworkPreviewContainer{ @import '_functions.scss'; " + sassFrameworkMainFileString + " @import 'preview'; }",
+        function(result) {
+          console.log(result);
+          if (result.status === 0) {
+            resolve(result.text)
+          } else {
+            reject(result.message)
+          }
+        }
+      )
+    });
+  }
 
   render() {
 
     return (
       <div>
-        <style>{this.state.bootstrapCompiled}</style>
-        <BootstrapPreviewButtons/>
-
+        <style>{this.state.sassFrameworkCompiled}</style>
+        <div className="sassFrameworkPreviewContainer">
+          <BootstrapPreviewButtons/>
+        </div>
       </div>
     );
   }
@@ -211,10 +233,11 @@ class HomePage extends React.Component {
 
 HomePage.propTypes = {
   children: PropTypes.element,
-  bootstrapMainFile: PropTypes.string,
-  stringBootstrapSassVariables: PropTypes.string,
-  BootstrapVariables: PropTypes.object,
-  bootstrapCompiled: PropTypes.string
+  sassFrameworkMainFileString: PropTypes.string,
+  sassFrameworkVariablesString: PropTypes.string,
+  sassFrameworkVariables: PropTypes.object,
+  sassFrameworkCompiled: PropTypes.string,
+  sassFrameworkName: PropTypes.string
 };
 
 export default HomePage;
