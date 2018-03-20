@@ -1,25 +1,19 @@
 /* eslint-disable import/no-named-as-default */
 /* eslint-disable no-console */
 import React from 'react';
-// import { Link } from 'react-router-dom';
 import PropTypes from "prop-types";
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 
-// Bootstrap related data
-// import BootstrapSassFunctionsList from './BootstrapSassFunctionsList';
-// import GoogleFontsList from './GoogleFontsList';
-
-import BootstrapSassFilesList from './bootstrapRelatedData/BootstrapSassFilesList';
-import BootstrapSassVariables from './bootstrapRelatedData/BootstrapSassVariables';
-import BootstrapPreviewSass from './bootstrapRelatedData/BootstrapPreviewSass'
-
-// Bootstrap preview components
-import BootstrapPreviewButtons from './bootstrapPreview/BootstrapPreviewButtons';
+// Redux Actions
+import * as sassFrameworkBuilderActions from "../../actions/sassFrameworkBuilderActions";
 
 // Require Sass.js library
 const Sass = require("../../../static/sassjs/sass");
 
-const bootstrapSassFilesList = BootstrapSassFilesList;
-const bootstrapSassVariables = BootstrapSassVariables;
+// Bootstrap preview components
+import BootstrapPreviewSass from './bootstrapRelatedData/BootstrapPreviewSass'
+import BootstrapPreviewButtons from './bootstrapPreview/BootstrapPreviewButtons';
 
 class HomePage extends React.Component {
 
@@ -27,20 +21,14 @@ class HomePage extends React.Component {
     super(props, context);
 
     this.sass = this.getSassJsInstance();
-    this.sassFrameworkFilesPathBase = '../bootstrap/scss/';
-    this.sassFrameworkFilesPathDirectory = '';
-    this.sassFrameworkFilesList = bootstrapSassFilesList;
-    this.sassFrameworkMainFile = 'bootstrap.scss';
-
-    this.sassFrameworkVariablesOriginal = bootstrapSassVariables;
 
     this.state = {
-      open: false,
+      sassFrameworkBuilderData: Object.assign({}, props.sassFrameworkBuilderData),
+
       sassFrameworkMainFileString: '',
       sassFrameworkVariablesString: '',
-      sassFrameworkVariables: null,
-      sassFrameworkCompiled: '',
-      sassFrameworkName: 'bootstrap'
+      sassFrameworkVariables: {},
+      sassFrameworkCompiled: ''
     };
 
     this.getSassJsInstance = this.getSassJsInstance.bind(this);
@@ -54,31 +42,36 @@ class HomePage extends React.Component {
   }
 
   componentDidMount() {
-    this.initBootstrapSass();
+    this.props.actions.loadSassFrameworkData().then(() => {
+      this.setState({sassFrameworkBuilderData: this.props.sassFrameworkBuilderData});
+      this.initBootstrapSass();
+    });
   }
 
   initBootstrapSass(){
+    let {sassFrameworkBuilderData} =  this.state;
+
     this.setState({
-      sassFrameworkVariablesString: this.getSassFrameworkVariablesFileString(this.sassFrameworkVariablesOriginal)
+      sassFrameworkVariablesString: this.getSassFrameworkVariablesFileString(sassFrameworkBuilderData.sassFrameworkVariablesOriginal)
     });
 
     this.setState({
-      sassFrameworkVariables: this.getSassFrameworkVariables(this.sassFrameworkVariablesOriginal)
+      sassFrameworkVariables: this.getSassFrameworkVariables(sassFrameworkBuilderData.sassFrameworkVariablesOriginal)
     });
 
 
     this.preloadSassFilesAndReturnMainFileContent(
       this.sass,
-      this.sassFrameworkFilesPathBase,
-      this.sassFrameworkFilesPathDirectory,
-      this.sassFrameworkFilesList,
-      this.sassFrameworkMainFile).then( sassFrameworkMainFileContent => {
+      sassFrameworkBuilderData.sassFrameworkFilesPathBase,
+      sassFrameworkBuilderData.sassFrameworkFilesPathDirectory,
+      sassFrameworkBuilderData.sassFrameworkFilesList,
+      sassFrameworkBuilderData.sassFrameworkMainFile).then( sassFrameworkMainFileContent => {
         this.setState({sassFrameworkMainFileString: sassFrameworkMainFileContent});
         this.compileSassFramework(
           this.sass,
           this.state.sassFrameworkVariablesString,
           this.state.sassFrameworkMainFileString,
-          this.state.sassFrameworkName).then(function (data){
+          sassFrameworkBuilderData.sassFrameworkType).then(function (data){
             this.setState({sassFrameworkCompiled: data});
           }.bind(this)
         )
@@ -191,8 +184,8 @@ class HomePage extends React.Component {
    * (sassFrameworkMainFileString) - String with the content of the main sass file of the framework
    *
   */
-  compileSassFramework(sass, sassFrameworkVariablesString, sassFrameworkMainFileString, sassFrameworkName) {
-    switch (sassFrameworkName) {
+  compileSassFramework(sass, sassFrameworkVariablesString, sassFrameworkMainFileString, sassFrameworkType) {
+    switch (sassFrameworkType) {
       case 'bootstrap':
         return this.compileSassFrameworkBootstrap(sass, sassFrameworkVariablesString, sassFrameworkMainFileString);
     }
@@ -223,6 +216,7 @@ class HomePage extends React.Component {
     return (
       <div>
         <style>{this.state.sassFrameworkCompiled}</style>
+        <div className=""></div>
         <div className="sassFrameworkPreviewContainer">
           <BootstrapPreviewButtons/>
         </div>
@@ -233,11 +227,37 @@ class HomePage extends React.Component {
 
 HomePage.propTypes = {
   children: PropTypes.element,
+  // Data coming from API
+  sassFrameworkBuilderData: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    ownerId: PropTypes.string.isRequired,
+    sassFrameworkFilesList: PropTypes.array.isRequired,
+    sassFrameworkFilesPathBase: PropTypes.string.isRequired,
+    sassFrameworkFilesPathDirectory: PropTypes.string.isRequired,
+    sassFrameworkMainFile: PropTypes.string.isRequired,
+    sassFrameworkVariablesOriginal: PropTypes.array.isRequired,
+    sassFrameworkType: PropTypes.string.isRequired
+  }).isRequired,
+
+
+  // Local Data
   sassFrameworkMainFileString: PropTypes.string,
   sassFrameworkVariablesString: PropTypes.string,
   sassFrameworkVariables: PropTypes.object,
   sassFrameworkCompiled: PropTypes.string,
-  sassFrameworkName: PropTypes.string
+  actions: PropTypes.object.isRequired
 };
 
-export default HomePage;
+function mapStateToProps(state) {
+  return {
+    sassFrameworkBuilderData: state.sassFrameworkBuilder
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    actions: bindActionCreators(sassFrameworkBuilderActions, dispatch)
+  };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
