@@ -612,6 +612,12 @@ export default [
             "type": ""
           },
           {
+            "key": "$paragraph-margin-bottom",
+            "value": "1rem",
+            "default": "1rem",
+            "type": ""
+          },
+          {
             "key": "$font-size-lg",
             "value": "1.25rem",
             "default": "1.25rem",
