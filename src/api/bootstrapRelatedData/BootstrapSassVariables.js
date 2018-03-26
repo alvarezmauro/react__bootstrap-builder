@@ -240,8 +240,14 @@ export default [
             },
             {
               "key": "$yiq-text-dark",
-              "value": "$gray-900 !default",
-              "default": "$gray-900 !default",
+              "value": "$gray-900",
+              "default": "$gray-900",
+              "type": ""
+            },
+            {
+              "key": "$yiq-text-light",
+              "value": "$white",
+              "default": "$white",
               "type": ""
             }
         ]
@@ -1085,7 +1091,7 @@ export default [
             "type": ""
           },
           {
-            "key": "$btn-padding-y",
+            "key": "$btn-padding-x",
             "value": "$input-btn-padding-x",
             "default": "$input-btn-padding-x",
             "type": ""
@@ -1531,6 +1537,12 @@ export default [
             "type": "color"
           },
           {
+            "key": "$custom-control-label-disabled-color",
+            "value": "$gray-600",
+            "default": "$gray-600",
+            "type": "color"
+          },
+          {
             "key": "$custom-control-description-disabled-color",
             "value": "$gray-600",
             "default": "$gray-600",
@@ -1570,6 +1582,12 @@ export default [
             "key": "$component-active-color",
             "value": "$white",
             "default": "$white",
+            "type": "color"
+          },
+          {
+            "key": "$custom-control-indicator-active-color",
+            "value": "$component-active-color",
+            "default": "$component-active-color",
             "type": "color"
           },
           {
