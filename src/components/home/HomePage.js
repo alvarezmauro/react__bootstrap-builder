@@ -106,7 +106,7 @@ class HomePage extends React.Component {
   /*
   Return an String with all the bootstrap variables
   */
-  getSassFrameworkVariablesFileString(bootstrapSassVariables = []) {
+  getSassFrameworkVariablesFileString(sassFrameworkVariables = []) {
     let string =
       '' +
       '/*\n' +
@@ -114,18 +114,45 @@ class HomePage extends React.Component {
       '*  \n' +
       '**/\n';
 
-    if(bootstrapSassVariables.length > 0){
-      for (let i = 0; i < bootstrapSassVariables.length; i++) {
-        string += '\n\n// ' + bootstrapSassVariables[i].name + '\n';
+    if(sassFrameworkVariables.length > 0){
 
-        for (let j = 0; j < bootstrapSassVariables[i].data.length; j++) {
-          string +=
-            bootstrapSassVariables[i].data[j].key + ': ' + bootstrapSassVariables[i].data[j].value + ';\n'
+      for (let i = 0; i < sassFrameworkVariables.length; i++) {
+        let componentVariables = sassFrameworkVariables[i];
+
+        string += '\n\n// ' + componentVariables.name + '\n';
+
+        for (let q = 0; q < componentVariables.data.length; q++) {
+          let componentVariablesGroup = componentVariables.data[q];
+
+          for (let j = 0; j < componentVariablesGroup.data.length; j++) {
+            if (typeof(componentVariablesGroup.data[j].value) === 'object'){
+              let tempValue = componentVariablesGroup.data[j].key + ' : (';
+
+              console.log(componentVariablesGroup.data[j].key);
+
+              for (let key in componentVariablesGroup.data[j].value) {
+                if (componentVariablesGroup.data[j].value.hasOwnProperty(key)) {
+                  tempValue += key + ':' + componentVariablesGroup.data[j].value[key] + ',';
+                }
+                // console.log(componentVariablesGroup.data[j].value[key]);
+              }
+              tempValue = tempValue.slice(0, -1);
+              string += tempValue + ');\n'
+            }else{
+              string += componentVariablesGroup.data[j].key + ': ' + componentVariablesGroup.data[j].value + ';\n'
+            }
+
+          }
         }
+
       }
 
-      // string += cssToAdd;
+      string += `@include _assert-ascending($grid-breakpoints, "$grid-breakpoints");
+@include _assert-starts-at-zero($grid-breakpoints);
+@include _assert-ascending($container-max-widths, "$container-max-widths");`;
     }
+
+    console.log(string);
 
     return string;
   }
@@ -194,13 +221,13 @@ class HomePage extends React.Component {
   compileSassFrameworkBootstrap(sass, sassFrameworkVariablesString, sassFrameworkMainFileString) {
 
     return new Promise((resolve, reject) => {
-      // sass.writeFile('variables.scss', sassFrameworkVariablesString);
+      sass.writeFile('variables.scss', sassFrameworkVariablesString);
       sass.writeFile('preview.scss', BootstrapPreviewSass);
       sass.compile(
         // ".test{ @import '_functions.scss'; @import 'variables';" + sassFrameworkMainFileString + '}',
-        ".sassFrameworkPreviewContainer{ @import '_functions.scss'; " + sassFrameworkMainFileString + " @import 'preview'; }",
+        ".sassFrameworkPreviewContainer{ @import '_functions.scss'; @import 'variables';" + sassFrameworkMainFileString + " @import 'preview'; }",
         function(result) {
-          console.log(result);
+          // console.log(result);
           if (result.status === 0) {
             resolve(result.text)
           } else {

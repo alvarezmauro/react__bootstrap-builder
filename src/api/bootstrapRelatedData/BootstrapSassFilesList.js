@@ -37,7 +37,7 @@ export default [
   '_transitions.scss',
   '_type.scss',
   '_utilities.scss',
-  '_variables.scss',
+  // '_variables.scss',
   'bootstrap-grid.scss',
   'bootstrap-reboot.scss',
   'bootstrap.scss',
