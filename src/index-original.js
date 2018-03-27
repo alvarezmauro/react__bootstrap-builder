@@ -1,30 +1,5 @@
 /* eslint-disable import/default */
 
-// import React from "react";
-// import ReactDOM from "react-dom";
-// import { createBrowserHistory } from "history";
-// import { Router, Route, Switch } from "react-router-dom";
-//
-// import "./assets/css/material-dashboard-react.css";
-//
-// import indexRoutes from "./routes/index.jsx";
-//
-// const hist = createBrowserHistory();
-//
-// ReactDOM.render(
-//   <Router history={hist}>
-//     <Switch>
-//       {indexRoutes.map((prop, key) => {
-//         return <Route path={prop.path} component={prop.component} key={key} />;
-//       })}
-//     </Switch>
-//   </Router>,
-//   document.getElementById("root")
-// );
-
-
-/* eslint-disable import/default */
-
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
@@ -39,18 +14,17 @@ render(
   <AppContainer>
     <Root store={store} history={history} />
   </AppContainer>,
-  document.getElementById('root')
+  document.getElementById('app')
 );
 
 if (module.hot) {
-  module.hot.accept('./containers/Root', () => {
+  module.hot.accept('./components/Root', () => {
     const NewRoot = require('./containers/Root').default;
     render(
       <AppContainer>
         <NewRoot store={store} history={history} />
       </AppContainer>,
-      document.getElementById('root')
+      document.getElementById('app')
     );
   });
 }
-
