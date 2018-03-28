@@ -6,15 +6,13 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
 // UI components
-import { Grid, InputLabel } from "material-ui";
+import Paper from 'material-ui/Paper';
+import { MenuItem, MenuList } from 'material-ui/Menu';
+import { Grid } from "material-ui";
+import Divider from 'material-ui/Divider';
+import Card, { CardContent } from 'material-ui/Card';
 
-import {
-  ProfileCard,
-  RegularCard,
-  Button,
-  CustomInput,
-  ItemGrid
-} from "../../components";
+import { ItemGrid } from "../../components";
 
 // Redux Actions
 import * as sassFrameworkBuilderActions from "../../actions/sassFrameworkBuilderActions";
@@ -23,8 +21,8 @@ import * as sassFrameworkBuilderActions from "../../actions/sassFrameworkBuilder
 const Sass = require("../../../static/sassjs/sass");
 
 // Bootstrap preview components
-import BootstrapPreviewSass from './bootstrapRelatedData/BootstrapPreviewSass'
-import BootstrapPreviewButtons from './bootstrapPreview/BootstrapPreviewButtons';
+import BootstrapPreview from './bootstrapPreview/BoostrapPreview';
+import BootstrapPreviewSass from './bootstrapRelatedData/BootstrapPreviewSass';
 
 class SassFrameworkBuilder extends React.Component {
 
@@ -39,7 +37,8 @@ class SassFrameworkBuilder extends React.Component {
       sassFrameworkMainFileString: '',
       sassFrameworkVariablesString: '',
       sassFrameworkVariables: {},
-      sassFrameworkCompiled: ''
+      sassFrameworkCompiled: '',
+      selectedSection: 'Buttons'
     };
 
     this.getSassJsInstance = this.getSassJsInstance.bind(this);
@@ -139,13 +138,10 @@ class SassFrameworkBuilder extends React.Component {
             if (typeof(componentVariablesGroup.data[j].value) === 'object'){
               let tempValue = componentVariablesGroup.data[j].key + ' : (';
 
-              console.log(componentVariablesGroup.data[j].key);
-
               for (let key in componentVariablesGroup.data[j].value) {
                 if (componentVariablesGroup.data[j].value.hasOwnProperty(key)) {
                   tempValue += key + ':' + componentVariablesGroup.data[j].value[key] + ',';
                 }
-                // console.log(componentVariablesGroup.data[j].value[key]);
               }
               tempValue = tempValue.slice(0, -1);
               string += tempValue + ');\n'
@@ -162,8 +158,6 @@ class SassFrameworkBuilder extends React.Component {
 @include _assert-starts-at-zero($grid-breakpoints);
 @include _assert-ascending($container-max-widths, "$container-max-widths");`;
     }
-
-    console.log(string);
 
     return string;
   }
@@ -236,7 +230,7 @@ class SassFrameworkBuilder extends React.Component {
       sass.writeFile('preview.scss', BootstrapPreviewSass);
       sass.compile(
         // ".test{ @import '_functions.scss'; @import 'variables';" + sassFrameworkMainFileString + '}',
-        ".sassFrameworkPreviewContainer{ @import '_functions.scss'; @import 'variables';" + sassFrameworkMainFileString + " @import 'preview'; }",
+        ".sassFrameworkPreviewContainer{; @import '_functions.scss'; @import 'variables';" + sassFrameworkMainFileString + " @import 'preview'; }",
         function(result) {
           // console.log(result);
           if (result.status === 0) {
@@ -249,37 +243,33 @@ class SassFrameworkBuilder extends React.Component {
     });
   }
 
+  /*
+   *  Update Sass Variables
+  */
+
+
   render() {
+    const {sassFrameworkBuilderData, selectedSection, sassFrameworkCompiled} = this.state;
 
     return (
       <div>
           <Grid container>
-            <ItemGrid xs={12} sm={12} md={8}>
-              <RegularCard
-                cardTitle="Preview"
-                content={
-                  <div>
-                    <Grid container>
-                      <style>{this.state.sassFrameworkCompiled}</style>
-                      <div className="sassFrameworkPreviewContainer">
-                        <BootstrapPreviewButtons/>
-                      </div>
-                    </Grid>
-                  </div>
-                } />
+            <ItemGrid xs={7} sm={8} md={10}>
+              <BootstrapPreview selectedSection={selectedSection} sassFrameworkCompiled={sassFrameworkCompiled} sassFrameworkVariablesOriginal={sassFrameworkBuilderData.sassFrameworkVariablesOriginal}  />
             </ItemGrid>
-            <ItemGrid xs={12} sm={12} md={4}>
-              <RegularCard
-                cardTitle="Edit"
-                // cardSubtitle=""
-                content={
-                  <div>
-                    <Grid container>
-                      test
-                    </Grid>
-                  </div>
-                } />
+
+            {/* Section Menu */}
+            <ItemGrid xs={5} sm={4} md={2}>
+              <Paper >
+                <MenuList>
+                  <MenuItem>Color System</MenuItem>
+                  <MenuItem>Grid System</MenuItem>
+                  <Divider />
+                  <MenuItem>Components</MenuItem>
+                </MenuList>
+              </Paper>
             </ItemGrid>
+
           </Grid>
       </div>
     );
@@ -288,6 +278,7 @@ class SassFrameworkBuilder extends React.Component {
 
 SassFrameworkBuilder.propTypes = {
   children: PropTypes.element,
+
   // Data coming from API
   sassFrameworkBuilderData: PropTypes.shape({
     name: PropTypes.string.isRequired,
@@ -306,6 +297,7 @@ SassFrameworkBuilder.propTypes = {
   sassFrameworkVariablesString: PropTypes.string,
   sassFrameworkVariables: PropTypes.object,
   sassFrameworkCompiled: PropTypes.string,
+  selectedSection: PropTypes.string,
   actions: PropTypes.object.isRequired
 };
 
