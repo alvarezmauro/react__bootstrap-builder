@@ -1,7 +1,7 @@
 import React from "react";
 import SassFrameworkBuilderComponent from '../../containers/SassFrameworkBuilder/SassFrameworkBuilder';
 
-function SassFrameworkBuilder({ ...props }) {
+function SassFrameworkBuilderPage({ ...props }) {
   return (
     <div>
       <SassFrameworkBuilderComponent />
@@ -9,4 +9,4 @@ function SassFrameworkBuilder({ ...props }) {
   );
 }
 
-export default SassFrameworkBuilder;
+export default SassFrameworkBuilderPage;

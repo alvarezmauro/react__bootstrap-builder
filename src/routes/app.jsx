@@ -1,4 +1,4 @@
-import SassFrameworkBuilder from "../views/SassFrameworkBuilder/SassFrameworkBuilder.jsx";
+import SassFrameworkBuilderPage from "../views/SassFrameworkBuilder/SassFrameworkBuilderPage.jsx";
 import DashboardPage from "../views/Dashboard/Dashboard.jsx";
 import UserProfile from "../views/UserProfile/UserProfile.jsx";
 import TableList from "../views/TableList/TableList.jsx";
@@ -23,7 +23,7 @@ const appRoutes = [
     sidebarName: "Framework Builder",
     navbarName: "Framework Builder",
     icon: Notifications,
-    component: SassFrameworkBuilder
+    component: SassFrameworkBuilderPage
   },
   {
     path: "/dashboard",
