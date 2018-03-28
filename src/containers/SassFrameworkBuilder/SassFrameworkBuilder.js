@@ -10,7 +10,6 @@ import Paper from 'material-ui/Paper';
 import { MenuItem, MenuList } from 'material-ui/Menu';
 import { Grid } from "material-ui";
 import Divider from 'material-ui/Divider';
-import Card, { CardContent } from 'material-ui/Card';
 
 import { ItemGrid } from "../../components";
 
@@ -21,7 +20,7 @@ import * as sassFrameworkBuilderActions from "../../actions/sassFrameworkBuilder
 const Sass = require("../../../static/sassjs/sass");
 
 // Bootstrap preview components
-import BootstrapPreview from './bootstrapPreview/BoostrapPreview';
+import BootstrapPreviewEdit from './boostrapPreviewEdit/BoostrapPreviewEdit';
 import BootstrapPreviewSass from './bootstrapRelatedData/BootstrapPreviewSass';
 
 class SassFrameworkBuilder extends React.Component {
@@ -255,7 +254,7 @@ class SassFrameworkBuilder extends React.Component {
       <div>
           <Grid container>
             <ItemGrid xs={7} sm={8} md={10}>
-              <BootstrapPreview selectedSection={selectedSection} sassFrameworkCompiled={sassFrameworkCompiled} sassFrameworkVariablesOriginal={sassFrameworkBuilderData.sassFrameworkVariablesOriginal}  />
+              <BootstrapPreviewEdit selectedSection={selectedSection} sassFrameworkCompiled={sassFrameworkCompiled} sassFrameworkVariablesOriginal={sassFrameworkBuilderData.sassFrameworkVariablesOriginal}  />
             </ItemGrid>
 
             {/* Section Menu */}

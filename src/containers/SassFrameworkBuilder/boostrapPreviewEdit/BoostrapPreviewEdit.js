@@ -26,7 +26,7 @@ const styles = () => ({
 /*
  * classes - Styles
  */
-const BootstrapPreview = ({selectedSection, sassFrameworkVariablesOriginal, sassFrameworkCompiled, classes}) => {
+const BootstrapPreviewEdit = ({selectedSection, sassFrameworkVariablesOriginal, sassFrameworkCompiled, classes}) => {
   console.log(sassFrameworkVariablesOriginal);
 
   const PreviewSection = () => {
@@ -58,11 +58,11 @@ const BootstrapPreview = ({selectedSection, sassFrameworkVariablesOriginal, sass
   );
 };
 
-BootstrapPreview.propTypes = {
+BootstrapPreviewEdit.propTypes = {
   classes: PropTypes.object.isRequired,
   sassFrameworkCompiled: PropTypes.string,
   sassFrameworkVariablesOriginal: PropTypes.array,
   selectedSection: PropTypes.string
 };
 
-export default withStyles(styles)(BootstrapPreview);
+export default withStyles(styles)(BootstrapPreviewEdit);
